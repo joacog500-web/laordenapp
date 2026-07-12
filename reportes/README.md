@@ -45,10 +45,26 @@ próximo envío programado, o pedile a Claude que corra la rutina "a mano" ese d
 - Si no existe todavía el período de comparación (por ejemplo, recién estás empezando a usar este
   sistema), el mail te avisa que no hay comparación disponible y muestra solo los datos actuales.
 
+## Envío del mail
+
+El envío se hace por Gmail SMTP con una **App Password** (no la contraseña real de la cuenta).
+Se genera en https://myaccount.google.com/apppasswords (requiere verificación en 2 pasos activada
+en la cuenta de Gmail). La App Password se pasa únicamente por la variable de entorno
+`GMAIL_APP_PASSWORD` al momento de ejecutar `enviar_mail.py` — nunca se guarda en este repo.
+
+```
+GMAIL_APP_PASSWORD="xxxx xxxx xxxx xxxx" python3 reportes/enviar_mail.py \
+  --from joacog500@gmail.com \
+  --to joacog500@gmail.com,daniel@laordenweb.com \
+  --subject "📊 Reporte semanal La Orden" \
+  --html-file reportes/output/ultimo_reporte_semanal.html
+```
+
 ## Archivos
 
 - `generar_reporte.py`: script que arma el HTML del mail (`python generar_reporte.py --tipo semanal`
   o `--tipo mensual`). Lee los Excel de `data/`, calcula ventas y producción, arma comparativos y
   escribe el resultado en `output/ultimo_reporte_<tipo>.html`.
+- `enviar_mail.py`: envía ese HTML por mail vía Gmail SMTP (ver arriba).
 - `data/`: acá van los Excel exportados de Trazal, organizados como se explicó arriba.
 - `output/`: acá queda el último HTML generado (no hace falta tocarlo).
